@@ -2,12 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { API_URL, setAuth } from '@/lib/auth';
 import { ApiResponse, AuthData } from '@/types/auth';
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
@@ -36,8 +34,7 @@ export default function RegisterPage() {
       }
 
       setAuth(data.data.token, data.data.user);
-      router.push('/');
-      router.refresh();
+      window.location.href = '/';
     } catch {
       setError('Error de conexión con el servidor');
     } finally {

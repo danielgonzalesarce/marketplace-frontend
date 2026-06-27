@@ -4,6 +4,7 @@ export const API_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 const COOKIE_MAX_AGE = 604800;
+export const AUTH_CHANGED_EVENT = 'auth-changed';
 
 function setCookie(name: string, value: string) {
   document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
@@ -11,10 +12,17 @@ function setCookie(name: string, value: string) {
 
 function getCookie(name: string): string | null {
   if (typeof document === 'undefined') return null;
+  const prefix = `${name}=`;
   const match = document.cookie
     .split('; ')
-    .find((row) => row.startsWith(`${name}=`));
-  return match ? decodeURIComponent(match.split('=').slice(1).join('=')) : null;
+    .find((row) => row.startsWith(prefix));
+  return match ? decodeURIComponent(match.slice(prefix.length)) : null;
+}
+
+function notifyAuthChange() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event(AUTH_CHANGED_EVENT));
+  }
 }
 
 export function setAuth(token: string, user: Pick<User, 'role' | 'nombre' | 'email'>) {
@@ -22,12 +30,14 @@ export function setAuth(token: string, user: Pick<User, 'role' | 'nombre' | 'ema
   setCookie('role', user.role);
   setCookie('userName', user.nombre);
   setCookie('userEmail', user.email);
+  notifyAuthChange();
 }
 
 export function clearAuth() {
   ['token', 'role', 'userName', 'userEmail'].forEach((name) => {
     document.cookie = `${name}=; path=/; max-age=0`;
   });
+  notifyAuthChange();
 }
 
 export function getToken(): string | null {
@@ -68,4 +78,10 @@ export function getAuthHeaders(): HeadersInit {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
+}
+
+export function subscribeAuthChange(callback: () => void) {
+  if (typeof window === 'undefined') return () => {};
+  window.addEventListener(AUTH_CHANGED_EVENT, callback);
+  return () => window.removeEventListener(AUTH_CHANGED_EVENT, callback);
 }

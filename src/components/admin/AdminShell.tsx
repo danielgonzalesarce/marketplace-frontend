@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
-import { getInitials, getStoredUser } from '@/lib/auth';
+import { getInitials, getStoredUser, subscribeAuthChange } from '@/lib/auth';
 import { useMounted } from '@/hooks/useMounted';
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
@@ -11,9 +11,12 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const [user, setUser] = useState<ReturnType<typeof getStoredUser>>(null);
 
   useEffect(() => {
-    if (mounted) {
-      setUser(getStoredUser());
-    }
+    if (!mounted) return;
+
+    const syncUser = () => setUser(getStoredUser());
+    syncUser();
+
+    return subscribeAuthChange(syncUser);
   }, [mounted]);
 
   return (

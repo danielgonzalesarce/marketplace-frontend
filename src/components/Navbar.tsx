@@ -1,19 +1,29 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { clearAuth, getInitials, getStoredUser } from '@/lib/auth';
+import {
+  clearAuth,
+  getInitials,
+  getStoredUser,
+  subscribeAuthChange,
+} from '@/lib/auth';
 import { useMounted } from '@/hooks/useMounted';
 
 export default function Navbar() {
   const mounted = useMounted();
+  const pathname = usePathname();
   const [user, setUser] = useState<ReturnType<typeof getStoredUser>>(null);
 
   useEffect(() => {
-    if (mounted) {
-      setUser(getStoredUser());
-    }
-  }, [mounted]);
+    if (!mounted) return;
+
+    const syncUser = () => setUser(getStoredUser());
+    syncUser();
+
+    return subscribeAuthChange(syncUser);
+  }, [mounted, pathname]);
 
   const handleLogout = () => {
     clearAuth();

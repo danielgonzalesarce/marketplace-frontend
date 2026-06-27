@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getStoredUser } from '@/lib/auth';
+import { getStoredUser, subscribeAuthChange } from '@/lib/auth';
 import { useMounted } from '@/hooks/useMounted';
 
 export default function WelcomeBanner() {
@@ -10,9 +10,12 @@ export default function WelcomeBanner() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    if (mounted) {
-      setUser(getStoredUser());
-    }
+    if (!mounted) return;
+
+    const syncUser = () => setUser(getStoredUser());
+    syncUser();
+
+    return subscribeAuthChange(syncUser);
   }, [mounted]);
 
   if (!mounted || !user || user.role === 'ADMIN' || !visible) {
