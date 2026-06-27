@@ -16,7 +16,8 @@ export function middleware(request: NextRequest) {
   }
 
   if ((pathname === '/login' || pathname === '/register') && token) {
-    return NextResponse.redirect(new URL('/', request.url));
+    const destination = role === 'ADMIN' ? '/admin' : '/';
+    return NextResponse.redirect(new URL(destination, request.url));
   }
 
   return NextResponse.next();
