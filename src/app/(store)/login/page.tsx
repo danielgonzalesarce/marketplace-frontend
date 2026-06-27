@@ -41,7 +41,7 @@ export default function LoginPage() {
         return;
       }
 
-      setAuth(data.data.token, data.data.user.role);
+      setAuth(data.data.token, data.data.user);
       router.push(data.data.user.role === 'ADMIN' ? '/admin' : '/');
       router.refresh();
     } catch {

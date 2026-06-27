@@ -35,7 +35,7 @@ export default function RegisterPage() {
         return;
       }
 
-      setAuth(data.data.token, data.data.user.role);
+      setAuth(data.data.token, data.data.user);
       router.push('/');
       router.refresh();
     } catch {

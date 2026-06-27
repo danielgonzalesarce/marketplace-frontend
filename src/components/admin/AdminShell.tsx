@@ -1,10 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
+import { getInitials, getStoredUser } from '@/lib/auth';
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [user, setUser] = useState<ReturnType<typeof getStoredUser>>(null);
+
+  useEffect(() => {
+    setUser(getStoredUser());
+  }, []);
 
   return (
     <div className="min-h-screen flex bg-slate-100">
@@ -44,9 +50,22 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               <p className="text-xs text-slate-500 hidden sm:block">Gestiona el catálogo de productos</p>
             </div>
           </div>
-          <span className="px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700 bg-indigo-50 rounded-full border border-indigo-200">
-            Admin
-          </span>
+          <div className="flex items-center gap-3">
+            {user && (
+              <div className="hidden sm:flex items-center gap-2.5 pr-3 border-r border-slate-200">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-xs font-bold">
+                  {getInitials(user.nombre)}
+                </div>
+                <div className="text-right leading-tight">
+                  <p className="text-sm font-semibold text-slate-900">{user.nombre}</p>
+                  <p className="text-[11px] text-slate-500">{user.email}</p>
+                </div>
+              </div>
+            )}
+            <span className="px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700 bg-indigo-50 rounded-full border border-indigo-200">
+              Admin
+            </span>
+          </div>
         </header>
 
         <div className="flex-1 p-4 sm:p-6 lg:p-8">{children}</div>
