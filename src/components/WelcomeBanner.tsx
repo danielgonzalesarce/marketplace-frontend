@@ -2,16 +2,22 @@
 
 import { useEffect, useState } from 'react';
 import { getStoredUser } from '@/lib/auth';
+import { useMounted } from '@/hooks/useMounted';
 
 export default function WelcomeBanner() {
+  const mounted = useMounted();
   const [user, setUser] = useState<ReturnType<typeof getStoredUser>>(null);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    setUser(getStoredUser());
-  }, []);
+    if (mounted) {
+      setUser(getStoredUser());
+    }
+  }, [mounted]);
 
-  if (!user || user.role === 'ADMIN' || !visible) return null;
+  if (!mounted || !user || user.role === 'ADMIN' || !visible) {
+    return null;
+  }
 
   return (
     <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-emerald-100">

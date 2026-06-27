@@ -3,23 +3,25 @@
 import { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
 import { getInitials, getStoredUser } from '@/lib/auth';
+import { useMounted } from '@/hooks/useMounted';
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
+  const mounted = useMounted();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [user, setUser] = useState<ReturnType<typeof getStoredUser>>(null);
 
   useEffect(() => {
-    setUser(getStoredUser());
-  }, []);
+    if (mounted) {
+      setUser(getStoredUser());
+    }
+  }, [mounted]);
 
   return (
     <div className="min-h-screen flex bg-slate-100">
-      {/* Sidebar desktop */}
       <div className="hidden lg:flex lg:w-64 lg:fixed lg:inset-y-0 lg:z-30">
         <AdminSidebar />
       </div>
 
-      {/* Sidebar mobile overlay */}
       {sidebarOpen && (
         <div className="lg:hidden fixed inset-0 z-40 flex">
           <div
@@ -32,7 +34,6 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         </div>
       )}
 
-      {/* Main content */}
       <div className="flex-1 lg:pl-64 flex flex-col min-h-screen">
         <header className="sticky top-0 z-20 bg-white border-b border-slate-200 px-4 sm:px-6 h-16 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
@@ -50,8 +51,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               <p className="text-xs text-slate-500 hidden sm:block">Gestiona el catálogo de productos</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            {user && (
+          <div className="flex items-center gap-3 min-h-[32px]">
+            {mounted && user && (
               <div className="hidden sm:flex items-center gap-2.5 pr-3 border-r border-slate-200">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-xs font-bold">
                   {getInitials(user.nombre)}

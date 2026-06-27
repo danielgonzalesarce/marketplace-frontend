@@ -53,7 +53,7 @@ export default function Footer() {
         </div>
 
         <div className="pt-8 border-t border-slate-800 text-center text-sm text-slate-500">
-          &copy; {new Date().getFullYear()} ProductStore. Todos los derechos reservados.
+          &copy; 2026 ProductStore. Todos los derechos reservados.
         </div>
       </div>
     </footer>

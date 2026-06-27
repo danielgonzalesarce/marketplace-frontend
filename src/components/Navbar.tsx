@@ -3,15 +3,17 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { clearAuth, getInitials, getStoredUser } from '@/lib/auth';
+import { useMounted } from '@/hooks/useMounted';
 
 export default function Navbar() {
+  const mounted = useMounted();
   const [user, setUser] = useState<ReturnType<typeof getStoredUser>>(null);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setUser(getStoredUser());
-    setMounted(true);
-  }, []);
+    if (mounted) {
+      setUser(getStoredUser());
+    }
+  }, [mounted]);
 
   const handleLogout = () => {
     clearAuth();
@@ -34,13 +36,17 @@ export default function Navbar() {
             </span>
           </Link>
 
-          <div className="flex gap-2 sm:gap-3 items-center">
+          <div className="flex gap-2 sm:gap-3 items-center min-h-[36px]">
             <Link
               href="/"
               className="hidden sm:inline-flex px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
             >
               Productos
             </Link>
+
+            {!mounted && (
+              <div className="h-9 w-28 rounded-xl bg-slate-100 animate-pulse" aria-hidden />
+            )}
 
             {mounted && !user && (
               <>
