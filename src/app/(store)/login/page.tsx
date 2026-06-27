@@ -11,6 +11,11 @@ const ADMIN_DEMO = {
   password: 'admin123',
 };
 
+const CUSTOMER_DEMO = {
+  email: 'cliente@productstore.com',
+  password: 'cliente123',
+};
+
 export default function LoginPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -102,21 +107,39 @@ export default function LoginPage() {
               />
             </div>
 
-            <button
-              type="button"
-              onClick={() =>
-                setFormData({
-                  email: ADMIN_DEMO.email,
-                  password: ADMIN_DEMO.password,
-                })
-              }
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-indigo-300 text-indigo-600 text-sm font-medium hover:bg-indigo-50 transition-colors"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              Autocompletar acceso administrador
-            </button>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() =>
+                  setFormData({
+                    email: CUSTOMER_DEMO.email,
+                    password: CUSTOMER_DEMO.password,
+                  })
+                }
+                className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-emerald-300 text-emerald-600 text-sm font-medium hover:bg-emerald-50 transition-colors"
+              >
+                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Demo cliente
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setFormData({
+                    email: ADMIN_DEMO.email,
+                    password: ADMIN_DEMO.password,
+                  })
+                }
+                className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-indigo-300 text-indigo-600 text-sm font-medium hover:bg-indigo-50 transition-colors"
+              >
+                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                Demo admin
+              </button>
+            </div>
 
             <button
               type="submit"
