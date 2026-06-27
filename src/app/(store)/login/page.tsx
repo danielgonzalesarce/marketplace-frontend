@@ -6,6 +6,11 @@ import { useRouter } from 'next/navigation';
 import { API_URL, setAuth } from '@/lib/auth';
 import { ApiResponse, AuthData } from '@/types/auth';
 
+const ADMIN_DEMO = {
+  email: 'admin@productstore.com',
+  password: 'admin123',
+};
+
 export default function LoginPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -96,6 +101,22 @@ export default function LoginPage() {
                 className="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
               />
             </div>
+
+            <button
+              type="button"
+              onClick={() =>
+                setFormData({
+                  email: ADMIN_DEMO.email,
+                  password: ADMIN_DEMO.password,
+                })
+              }
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-indigo-300 text-indigo-600 text-sm font-medium hover:bg-indigo-50 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              Autocompletar acceso administrador
+            </button>
 
             <button
               type="submit"
